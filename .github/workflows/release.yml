@@ -22,7 +22,7 @@ jobs:
       - run: npm run check
       - run: npm sbom --sbom-format cyclonedx > switch-sbom.json
       - run: npm pack
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: |
             switch-*.tgz
