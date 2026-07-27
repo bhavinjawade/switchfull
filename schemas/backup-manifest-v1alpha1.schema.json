@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/backup-manifest-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["apiVersion", "createdAt", "database", "artifacts", "checksums"],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/backup/v1alpha1",
+      "type": "string"
+    },
+    "createdAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "database": {
+      "const": "switch.sqlite",
+      "type": "string"
+    },
+    "artifacts": {
+      "const": "artifacts",
+      "type": "string"
+    },
+    "checksums": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/decision-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "answer",
+    "consensus",
+    "dissent",
+    "unresolvedQuestions",
+    "risks",
+    "nextActions",
+    "supportingArtifactIds",
+    "provenance"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/decision/v1alpha1",
+      "type": "string"
+    },
+    "answer": {
+      "type": "string"
+    },
+    "consensus": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dissent": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unresolvedQuestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "minimum": 0,
+      "maximum": 1,
+      "type": "number"
+    },
+    "supportingArtifactIds": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["runId", "protocolId", "protocolVersion", "participants"],
+      "properties": {
+        "runId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "protocolId": {
+          "type": "string"
+        },
+        "protocolVersion": {
+          "type": "string"
+        },
+        "participants": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

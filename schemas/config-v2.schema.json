@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "switch.dev/config/v2",
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["apiVersion", "defaults", "connectors", "participants", "profiles", "policy"],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/config/v2",
+      "type": "string"
+    },
+    "defaults": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["profile", "timeoutMs", "maxConcurrency", "unknownAttemptPolicy"],
+      "properties": {
+        "profile": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "timeoutMs": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "maxConcurrency": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "unknownAttemptPolicy": {
+          "anyOf": [
+            {
+              "const": "pause",
+              "type": "string"
+            },
+            {
+              "const": "human",
+              "type": "string"
+            },
+            {
+              "const": "retry",
+              "type": "string"
+            },
+            {
+              "const": "abandon",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    "connectors": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "kind",
+            "enabled",
+            "environmentAllowlist",
+            "secrets",
+            "billingType",
+            "config"
+          ],
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "const": "process",
+                  "type": "string"
+                },
+                {
+                  "const": "http",
+                  "type": "string"
+                },
+                {
+                  "const": "embedded",
+                  "type": "string"
+                },
+                {
+                  "const": "human",
+                  "type": "string"
+                }
+              ]
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "command": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "baseUrl": {
+              "type": "string"
+            },
+            "environmentAllowlist": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "secrets": {
+              "type": "object",
+              "patternProperties": {
+                "^(.*)$": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": ["source", "key"],
+                  "properties": {
+                    "source": {
+                      "anyOf": [
+                        {
+                          "const": "environment",
+                          "type": "string"
+                        },
+                        {
+                          "const": "keychain",
+                          "type": "string"
+                        },
+                        {
+                          "const": "encrypted_file",
+                          "type": "string"
+                        },
+                        {
+                          "const": "external",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "key": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "billingType": {
+              "anyOf": [
+                {
+                  "const": "metered_api",
+                  "type": "string"
+                },
+                {
+                  "const": "prepaid_subscription",
+                  "type": "string"
+                },
+                {
+                  "const": "free_tier",
+                  "type": "string"
+                },
+                {
+                  "const": "local_compute",
+                  "type": "string"
+                },
+                {
+                  "const": "enterprise_allocation",
+                  "type": "string"
+                },
+                {
+                  "const": "unknown_external",
+                  "type": "string"
+                }
+              ]
+            },
+            "config": {
+              "type": "object",
+              "patternProperties": {
+                "^(.*)$": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "participants": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "enabled",
+            "kind",
+            "connector",
+            "displayName",
+            "expertise",
+            "tags",
+            "config"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "kind": {
+              "anyOf": [
+                {
+                  "const": "model",
+                  "type": "string"
+                },
+                {
+                  "const": "model_session",
+                  "type": "string"
+                },
+                {
+                  "const": "agent",
+                  "type": "string"
+                },
+                {
+                  "const": "judge",
+                  "type": "string"
+                },
+                {
+                  "const": "verifier",
+                  "type": "string"
+                },
+                {
+                  "const": "human",
+                  "type": "string"
+                },
+                {
+                  "const": "composite",
+                  "type": "string"
+                }
+              ]
+            },
+            "connector": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "model": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "displayName": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "role": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "mandate": {
+              "type": "string"
+            },
+            "expertise": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tags": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "costPolicy": {
+              "anyOf": [
+                {
+                  "const": "free-only",
+                  "type": "string"
+                },
+                {
+                  "const": "any",
+                  "type": "string"
+                }
+              ]
+            },
+            "config": {
+              "type": "object",
+              "patternProperties": {
+                "^(.*)$": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {
+          "additionalProperties": false,
+          "type": "object",
+          "required": ["label", "description", "mode", "participants", "budget", "config"],
+          "properties": {
+            "label": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "mode": {
+              "anyOf": [
+                {
+                  "const": "direct",
+                  "type": "string"
+                },
+                {
+                  "const": "council",
+                  "type": "string"
+                },
+                {
+                  "const": "routed",
+                  "type": "string"
+                }
+              ]
+            },
+            "protocol": {
+              "type": "string"
+            },
+            "participants": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "synthesizer": {
+              "type": "string"
+            },
+            "router": {
+              "type": "string"
+            },
+            "critiqueRounds": {
+              "minimum": 0,
+              "maximum": 10,
+              "type": "integer"
+            },
+            "budget": {
+              "additionalProperties": false,
+              "type": "object",
+              "properties": {
+                "maxInputTokens": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxOutputTokens": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxCalls": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxRouterCalls": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxCost": {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "currency": {
+                  "minLength": 3,
+                  "maxLength": 3,
+                  "type": "string"
+                },
+                "maxWallTimeMs": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "maxConcurrency": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "maxRounds": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxGraphNodes": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "maxNestedDepth": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            },
+            "config": {
+              "type": "object",
+              "patternProperties": {
+                "^(.*)$": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "plugins": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["trustedPluginIds", "allowUntrusted", "allowUnsafeNetwork"],
+      "properties": {
+        "trustedPluginIds": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "allowUntrusted": {
+          "type": "boolean"
+        },
+        "allowUnsafeNetwork": {
+          "type": "boolean"
+        }
+      }
+    },
+    "policy": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["deployment", "allowPersonalSubscriptions", "defaultDataClass"],
+      "properties": {
+        "deployment": {
+          "anyOf": [
+            {
+              "const": "local",
+              "type": "string"
+            },
+            {
+              "const": "hosted",
+              "type": "string"
+            }
+          ]
+        },
+        "allowPersonalSubscriptions": {
+          "type": "boolean"
+        },
+        "defaultDataClass": {
+          "anyOf": [
+            {
+              "const": "public",
+              "type": "string"
+            },
+            {
+              "const": "internal",
+              "type": "string"
+            },
+            {
+              "const": "confidential",
+              "type": "string"
+            },
+            {
+              "const": "restricted",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

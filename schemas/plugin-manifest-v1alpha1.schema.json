@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/plugin-manifest-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["apiVersion", "id", "name", "version", "type", "trust", "permissions"],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/plugin/v1alpha1",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]+$",
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "type": {
+      "anyOf": [
+        {
+          "const": "participant",
+          "type": "string"
+        },
+        {
+          "const": "protocol",
+          "type": "string"
+        }
+      ]
+    },
+    "trust": {
+      "anyOf": [
+        {
+          "const": "built-in",
+          "type": "string"
+        },
+        {
+          "const": "first-party",
+          "type": "string"
+        },
+        {
+          "const": "community",
+          "type": "string"
+        }
+      ]
+    },
+    "command": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "connector": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "id",
+        "name",
+        "version",
+        "kind",
+        "stability",
+        "transport",
+        "authOwner",
+        "billingType",
+        "capabilities"
+      ],
+      "properties": {
+        "apiVersion": {
+          "const": "switch.dev/connector/v1alpha1",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "const": "model",
+              "type": "string"
+            },
+            {
+              "const": "model_session",
+              "type": "string"
+            },
+            {
+              "const": "agent",
+              "type": "string"
+            },
+            {
+              "const": "judge",
+              "type": "string"
+            },
+            {
+              "const": "verifier",
+              "type": "string"
+            },
+            {
+              "const": "human",
+              "type": "string"
+            },
+            {
+              "const": "composite",
+              "type": "string"
+            }
+          ]
+        },
+        "stability": {
+          "anyOf": [
+            {
+              "const": "built-in-stable",
+              "type": "string"
+            },
+            {
+              "const": "first-party-beta",
+              "type": "string"
+            },
+            {
+              "const": "first-party-experimental",
+              "type": "string"
+            },
+            {
+              "const": "community",
+              "type": "string"
+            },
+            {
+              "const": "unsupported",
+              "type": "string"
+            }
+          ]
+        },
+        "transport": {
+          "anyOf": [
+            {
+              "const": "process",
+              "type": "string"
+            },
+            {
+              "const": "http",
+              "type": "string"
+            },
+            {
+              "const": "acp",
+              "type": "string"
+            },
+            {
+              "const": "embedded",
+              "type": "string"
+            },
+            {
+              "const": "human",
+              "type": "string"
+            }
+          ]
+        },
+        "authOwner": {
+          "anyOf": [
+            {
+              "const": "external_cli",
+              "type": "string"
+            },
+            {
+              "const": "switch_secret_store",
+              "type": "string"
+            },
+            {
+              "const": "environment",
+              "type": "string"
+            },
+            {
+              "const": "operating_system",
+              "type": "string"
+            },
+            {
+              "const": "provider_sdk",
+              "type": "string"
+            },
+            {
+              "const": "enterprise_identity",
+              "type": "string"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "billingType": {
+          "anyOf": [
+            {
+              "const": "metered_api",
+              "type": "string"
+            },
+            {
+              "const": "prepaid_subscription",
+              "type": "string"
+            },
+            {
+              "const": "free_tier",
+              "type": "string"
+            },
+            {
+              "const": "local_compute",
+              "type": "string"
+            },
+            {
+              "const": "enterprise_allocation",
+              "type": "string"
+            },
+            {
+              "const": "unknown_external",
+              "type": "string"
+            }
+          ]
+        },
+        "capabilities": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "const": "text_generation",
+                "type": "string"
+              },
+              {
+                "const": "structured_output",
+                "type": "string"
+              },
+              {
+                "const": "streaming",
+                "type": "string"
+              },
+              {
+                "const": "tool_use",
+                "type": "string"
+              },
+              {
+                "const": "vision",
+                "type": "string"
+              },
+              {
+                "const": "file_context",
+                "type": "string"
+              },
+              {
+                "const": "workspace",
+                "type": "string"
+              },
+              {
+                "const": "persistent_session",
+                "type": "string"
+              },
+              {
+                "const": "reasoning_controls",
+                "type": "string"
+              },
+              {
+                "const": "seed_support",
+                "type": "string"
+              },
+              {
+                "const": "usage_reporting",
+                "type": "string"
+              },
+              {
+                "const": "provider_idempotency",
+                "type": "string"
+              },
+              {
+                "const": "cancellation",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "command": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "environmentAllowlist": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supportedPlatforms": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "permissions": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["filesystem", "network", "environment"],
+      "properties": {
+        "filesystem": {
+          "anyOf": [
+            {
+              "const": "none",
+              "type": "string"
+            },
+            {
+              "const": "workspace-read",
+              "type": "string"
+            },
+            {
+              "const": "workspace-write",
+              "type": "string"
+            }
+          ]
+        },
+        "network": {
+          "anyOf": [
+            {
+              "const": "none",
+              "type": "string"
+            },
+            {
+              "const": "declared",
+              "type": "string"
+            }
+          ]
+        },
+        "environment": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "packageHash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "protocolFiles": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/router-proposal-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["strategy", "reason", "difficulty", "selectedParticipants", "alternatives"],
+  "properties": {
+    "strategy": {
+      "anyOf": [
+        {
+          "const": "single",
+          "type": "string"
+        },
+        {
+          "const": "parallel",
+          "type": "string"
+        },
+        {
+          "const": "sequential",
+          "type": "string"
+        },
+        {
+          "const": "council",
+          "type": "string"
+        },
+        {
+          "const": "verify",
+          "type": "string"
+        },
+        {
+          "const": "cascade",
+          "type": "string"
+        },
+        {
+          "const": "cached",
+          "type": "string"
+        },
+        {
+          "const": "human_gate",
+          "type": "string"
+        }
+      ]
+    },
+    "reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "difficulty": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["level", "confidence"],
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "const": "low",
+              "type": "string"
+            },
+            {
+              "const": "medium",
+              "type": "string"
+            },
+            {
+              "const": "high",
+              "type": "string"
+            },
+            {
+              "const": "extreme",
+              "type": "string"
+            }
+          ]
+        },
+        "confidence": {
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        }
+      }
+    },
+    "selectedParticipants": {
+      "minItems": 1,
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "protocolId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "critiqueRounds": {
+      "minimum": 0,
+      "maximum": 3,
+      "type": "integer"
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

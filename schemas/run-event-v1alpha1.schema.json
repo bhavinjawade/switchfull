@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/run-event-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "id",
+    "runId",
+    "sequence",
+    "timestamp",
+    "type",
+    "correlationId",
+    "actor",
+    "payload",
+    "payloadHash"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/run-event/v1alpha1",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "runId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "type": {
+      "anyOf": [
+        {
+          "const": "RunCreated",
+          "type": "string"
+        },
+        {
+          "const": "ConfigurationResolved",
+          "type": "string"
+        },
+        {
+          "const": "PolicyResolved",
+          "type": "string"
+        },
+        {
+          "const": "ProtocolCompiled",
+          "type": "string"
+        },
+        {
+          "const": "ExecutionPlanAccepted",
+          "type": "string"
+        },
+        {
+          "const": "RunQueued",
+          "type": "string"
+        },
+        {
+          "const": "RunStarted",
+          "type": "string"
+        },
+        {
+          "const": "StageReady",
+          "type": "string"
+        },
+        {
+          "const": "StageStarted",
+          "type": "string"
+        },
+        {
+          "const": "AttemptScheduled",
+          "type": "string"
+        },
+        {
+          "const": "InvocationStarted",
+          "type": "string"
+        },
+        {
+          "const": "InvocationSucceeded",
+          "type": "string"
+        },
+        {
+          "const": "InvocationFailed",
+          "type": "string"
+        },
+        {
+          "const": "InvocationTimedOut",
+          "type": "string"
+        },
+        {
+          "const": "InvocationCancelled",
+          "type": "string"
+        },
+        {
+          "const": "InvocationBecameUnknown",
+          "type": "string"
+        },
+        {
+          "const": "ArtifactRecorded",
+          "type": "string"
+        },
+        {
+          "const": "UsageRecorded",
+          "type": "string"
+        },
+        {
+          "const": "BudgetReserved",
+          "type": "string"
+        },
+        {
+          "const": "BudgetReconciled",
+          "type": "string"
+        },
+        {
+          "const": "StageCompleted",
+          "type": "string"
+        },
+        {
+          "const": "StageFailed",
+          "type": "string"
+        },
+        {
+          "const": "RoutingRequested",
+          "type": "string"
+        },
+        {
+          "const": "RoutingDecisionProposed",
+          "type": "string"
+        },
+        {
+          "const": "RoutingDecisionRejected",
+          "type": "string"
+        },
+        {
+          "const": "RoutingDecisionRepaired",
+          "type": "string"
+        },
+        {
+          "const": "HumanInputRequested",
+          "type": "string"
+        },
+        {
+          "const": "HumanInputReceived",
+          "type": "string"
+        },
+        {
+          "const": "RunPaused",
+          "type": "string"
+        },
+        {
+          "const": "RunResumed",
+          "type": "string"
+        },
+        {
+          "const": "RunCancelling",
+          "type": "string"
+        },
+        {
+          "const": "RunCancelled",
+          "type": "string"
+        },
+        {
+          "const": "RunFailed",
+          "type": "string"
+        },
+        {
+          "const": "RunCompleted",
+          "type": "string"
+        },
+        {
+          "const": "RunForked",
+          "type": "string"
+        }
+      ]
+    },
+    "correlationId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "causationId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "actor": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {}
+      }
+    },
+    "payloadHash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    }
+  }
+}

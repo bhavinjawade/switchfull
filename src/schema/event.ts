@@ -1,0 +1,58 @@
+import { Type, type Static } from "@sinclair/typebox";
+
+export const RunEventTypeSchema = Type.Union([
+  Type.Literal("RunCreated"),
+  Type.Literal("ConfigurationResolved"),
+  Type.Literal("PolicyResolved"),
+  Type.Literal("ProtocolCompiled"),
+  Type.Literal("ExecutionPlanAccepted"),
+  Type.Literal("RunQueued"),
+  Type.Literal("RunStarted"),
+  Type.Literal("StageReady"),
+  Type.Literal("StageStarted"),
+  Type.Literal("AttemptScheduled"),
+  Type.Literal("InvocationStarted"),
+  Type.Literal("InvocationSucceeded"),
+  Type.Literal("InvocationFailed"),
+  Type.Literal("InvocationTimedOut"),
+  Type.Literal("InvocationCancelled"),
+  Type.Literal("InvocationBecameUnknown"),
+  Type.Literal("ArtifactRecorded"),
+  Type.Literal("UsageRecorded"),
+  Type.Literal("BudgetReserved"),
+  Type.Literal("BudgetReconciled"),
+  Type.Literal("StageCompleted"),
+  Type.Literal("StageFailed"),
+  Type.Literal("RoutingRequested"),
+  Type.Literal("RoutingDecisionProposed"),
+  Type.Literal("RoutingDecisionRejected"),
+  Type.Literal("RoutingDecisionRepaired"),
+  Type.Literal("HumanInputRequested"),
+  Type.Literal("HumanInputReceived"),
+  Type.Literal("RunPaused"),
+  Type.Literal("RunResumed"),
+  Type.Literal("RunCancelling"),
+  Type.Literal("RunCancelled"),
+  Type.Literal("RunFailed"),
+  Type.Literal("RunCompleted"),
+  Type.Literal("RunForked"),
+]);
+export type RunEventType = Static<typeof RunEventTypeSchema>;
+
+export const RunEventEnvelopeSchema = Type.Object(
+  {
+    apiVersion: Type.Literal("switch.dev/run-event/v1alpha1"),
+    id: Type.String({ format: "uuid" }),
+    runId: Type.String({ format: "uuid" }),
+    sequence: Type.Integer({ minimum: 1 }),
+    timestamp: Type.String({ format: "date-time" }),
+    type: RunEventTypeSchema,
+    correlationId: Type.String({ format: "uuid" }),
+    causationId: Type.Optional(Type.String({ format: "uuid" })),
+    actor: Type.String({ minLength: 1 }),
+    payload: Type.Record(Type.String(), Type.Unknown()),
+    payloadHash: Type.String({ pattern: "^[a-f0-9]{64}$" }),
+  },
+  { additionalProperties: false },
+);
+export type RunEventEnvelope = Static<typeof RunEventEnvelopeSchema>;

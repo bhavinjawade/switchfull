@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/run-export-manifest-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "switchVersion",
+    "createdAt",
+    "runId",
+    "parentRunId",
+    "included",
+    "omitted",
+    "checksums"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/run-export/v1alpha1",
+      "type": "string"
+    },
+    "switchVersion": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "createdAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "runId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "parentRunId": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "included": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "omitted": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

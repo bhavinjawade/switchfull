@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/participant-result-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["requestId", "text", "usage"],
+  "properties": {
+    "requestId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "raw": {
+      "type": "string"
+    },
+    "structured": {},
+    "providerRequestId": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "stopReason": {
+      "type": "string"
+    },
+    "usage": {
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "inputTokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outputTokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "estimatedTokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "maxLength": 3,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "subscriptionUnits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "anyOf": [
+            {
+              "const": "reported",
+              "type": "string"
+            },
+            {
+              "const": "estimated",
+              "type": "string"
+            },
+            {
+              "const": "unavailable",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {}
+      }
+    }
+  }
+}

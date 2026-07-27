@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://switch.dev/schema/execution-plan-v1alpha1",
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "id",
+    "mode",
+    "protocolId",
+    "protocolVersion",
+    "stages",
+    "entryStages",
+    "finalStage",
+    "budget",
+    "metadata"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "switch.dev/plan/v1alpha1",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "const": "direct",
+          "type": "string"
+        },
+        {
+          "const": "council",
+          "type": "string"
+        },
+        {
+          "const": "routed",
+          "type": "string"
+        }
+      ]
+    },
+    "protocolId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "protocolVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "stages": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "operator",
+          "dependsOn",
+          "participants",
+          "visibility",
+          "quorum",
+          "retry",
+          "timeoutMs"
+        ],
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "operator": {
+            "anyOf": [
+              {
+                "const": "generate",
+                "type": "string"
+              },
+              {
+                "const": "sample",
+                "type": "string"
+              },
+              {
+                "const": "critique",
+                "type": "string"
+              },
+              {
+                "const": "revise",
+                "type": "string"
+              },
+              {
+                "const": "synthesize",
+                "type": "string"
+              },
+              {
+                "const": "verify",
+                "type": "string"
+              },
+              {
+                "const": "vote",
+                "type": "string"
+              },
+              {
+                "const": "stop",
+                "type": "string"
+              },
+              {
+                "const": "human_gate",
+                "type": "string"
+              }
+            ]
+          },
+          "dependsOn": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "participants": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "role": {
+            "type": "string"
+          },
+          "promptTemplate": {
+            "type": "string"
+          },
+          "inputStages": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "visibility": {
+            "anyOf": [
+              {
+                "const": "private",
+                "type": "string"
+              },
+              {
+                "const": "role",
+                "type": "string"
+              },
+              {
+                "const": "identity-stripped-council",
+                "type": "string"
+              },
+              {
+                "const": "council",
+                "type": "string"
+              },
+              {
+                "const": "judge-only",
+                "type": "string"
+              },
+              {
+                "const": "public-result",
+                "type": "string"
+              },
+              {
+                "const": "audit-only",
+                "type": "string"
+              }
+            ]
+          },
+          "quorum": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "condition": {
+            "$id": "https://switch.dev/schema/predicate/v1alpha1",
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": ["field", "operator"],
+                "properties": {
+                  "field": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "operator": {
+                    "anyOf": [
+                      {
+                        "const": "eq",
+                        "type": "string"
+                      },
+                      {
+                        "const": "neq",
+                        "type": "string"
+                      },
+                      {
+                        "const": "lt",
+                        "type": "string"
+                      },
+                      {
+                        "const": "lte",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gt",
+                        "type": "string"
+                      },
+                      {
+                        "const": "gte",
+                        "type": "string"
+                      },
+                      {
+                        "const": "in",
+                        "type": "string"
+                      },
+                      {
+                        "const": "exists",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": ["all"],
+                "properties": {
+                  "all": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "$ref": "https://switch.dev/schema/predicate/v1alpha1"
+                    }
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": ["any"],
+                "properties": {
+                  "any": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "$ref": "https://switch.dev/schema/predicate/v1alpha1"
+                    }
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": ["not"],
+                "properties": {
+                  "not": {
+                    "$ref": "https://switch.dev/schema/predicate/v1alpha1"
+                  }
+                }
+              }
+            ]
+          },
+          "budget": {
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "maxInputTokens": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxOutputTokens": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxCalls": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxRouterCalls": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxCost": {
+                "minimum": 0,
+                "type": "number"
+              },
+              "currency": {
+                "minLength": 3,
+                "maxLength": 3,
+                "type": "string"
+              },
+              "maxWallTimeMs": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "maxConcurrency": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "maxRounds": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxGraphNodes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "maxNestedDepth": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "retry": {
+            "additionalProperties": false,
+            "type": "object",
+            "required": ["maxAttempts", "initialDelayMs", "maxDelayMs", "backoffMultiplier"],
+            "properties": {
+              "maxAttempts": {
+                "minimum": 1,
+                "maximum": 10,
+                "type": "integer"
+              },
+              "initialDelayMs": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "maxDelayMs": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "backoffMultiplier": {
+                "minimum": 1,
+                "type": "number"
+              }
+            }
+          },
+          "timeoutMs": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxIterations": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "config": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
+          }
+        }
+      }
+    },
+    "entryStages": {
+      "minItems": 1,
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "finalStage": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "maxInputTokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxOutputTokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxCalls": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxRouterCalls": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxCost": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "currency": {
+          "minLength": 3,
+          "maxLength": 3,
+          "type": "string"
+        },
+        "maxWallTimeMs": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "maxConcurrency": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "maxRounds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxGraphNodes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "maxNestedDepth": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "patternProperties": {
+        "^(.*)$": {}
+      }
+    }
+  }
+}
